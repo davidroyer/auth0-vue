@@ -9,7 +9,7 @@
             class="btn btn-primary btn-margin">
               Home
           </router-link>
-
+          <router-link to="/about">About</router-link> |
           <button
             id="qsLoginBtn"
             class="btn btn-primary btn-margin"
@@ -25,7 +25,11 @@
             @click="logout()">
               Log Out
           </button>
-          <h2 v-if="authenticated && user">Hello {{user.name}}</h2>
+          <div v-if="authenticated && user">
+            <h2>Hello {{user.name}}</h2>
+            <img class="avatar" :src="user.picture" alt="">
+            <pre>{{user}}</pre>
+          </div>
         </div>
       </div>
     </nav>
@@ -51,17 +55,19 @@ export default {
   data() {
     authNotifier.on("authChange", authState => {
       this.authenticated = authState.authenticated;
+      console.log("authState: ", authState);
     });
     return {
       auth,
-      authenticated,
-      userProfile
+      authenticated
     };
   },
 
   computed: {
     user() {
-      return this.auth.userProfile;
+      return this.auth.userProfile
+        ? this.auth.userProfile
+        : JSON.parse(localStorage.getItem("user_profile"));
     }
   },
 
@@ -77,5 +83,10 @@ export default {
 
 .btn-margin {
   margin-top: 7px;
+}
+.avatar {
+  border-radius: 50%;
+  max-width: 100px;
+  max-height: 100px;
 }
 </style>

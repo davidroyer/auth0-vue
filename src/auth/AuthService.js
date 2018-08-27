@@ -56,8 +56,15 @@ export default class AuthService {
     localStorage.setItem("access_token", authResult.accessToken);
     localStorage.setItem("id_token", authResult.idToken);
     localStorage.setItem("expires_at", expiresAt);
-    localStorage.setItem("user_profile", authResult.idTokenPayload);
-    this.authNotifier.emit("authChange", { authenticated: true });
+
+    localStorage.setItem(
+      "user_profile",
+      JSON.stringify(authResult.idTokenPayload)
+    );
+    this.authNotifier.emit("authChange", {
+      authenticated: true,
+      currentUser: authResult.idTokenPayload
+    });
     console.log("from setSession: ", authResult.idTokenPayload);
     this.userProfile = authResult.idTokenPayload;
   }
@@ -71,8 +78,12 @@ export default class AuthService {
     localStorage.removeItem("access_token");
     localStorage.removeItem("id_token");
     localStorage.removeItem("expires_at");
+    localStorage.removeItem("user_profile");
     this.userProfile = null;
-    this.authNotifier.emit("authChange", false);
+    this.authNotifier.emit("authChange", {
+      authenticated: false,
+      currentUser: null
+    });
     // navigate to the home route
     router.replace("home");
   }
@@ -81,10 +92,6 @@ export default class AuthService {
     // Check whether the current time is past the
     // access token's expiry time
     let expiresAt = JSON.parse(localStorage.getItem("expires_at"));
-    if (new Date().getTime() < expiresAt) {
-      console.log("user: ", localStorage.getItem("user_profile"));
-      this.userProfile = localStorage.getItem("user_profile");
-    }
     return new Date().getTime() < expiresAt;
   }
 }

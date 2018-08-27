@@ -1,13 +1,14 @@
-import Vue from 'vue'
-import Router from 'vue-router'
-import Home from './views/Home.vue'
+import Vue from "vue";
+import Router from "vue-router";
+import Home from "./views/Home.vue";
 
 import { isLoggedIn } from "./utils/auth";
+import { isAuthenticated } from "./auth/AuthService";
 
-Vue.use(Router)
+Vue.use(Router);
 
 function requireAuth(to, from, next) {
-  if (!isLoggedIn()) {
+  if (!isAuthenticated()) {
     next({
       path: "/notauthorized"
     });
@@ -17,37 +18,38 @@ function requireAuth(to, from, next) {
 }
 
 export default new Router({
-  mode: 'history',
+  mode: "history",
   base: process.env.BASE_URL,
   routes: [
     {
-      path: '/',
-      name: 'home',
+      path: "/",
+      name: "home",
       component: Home
     },
     {
-      path: '/about',
-      name: 'about',
+      path: "/about",
+      name: "about",
       // route level code-splitting
       // this generates a separate chunk (about.[hash].js) for this route
       // which is lazy-loaded when the route is visited.
-      component: () => import(/* webpackChunkName: "about" */ './views/About.vue')
+      component: () =>
+        import(/* webpackChunkName: "about" */ "./views/About.vue")
     },
     {
-      path: '/secret',
-      name: 'secret',
+      path: "/secret",
+      name: "secret",
       beforeEnter: requireAuth,
-      component: () => import('./views/Secret.vue')
+      component: () => import("./views/Secret.vue")
     },
     {
-      path: '/callback',
-      name: 'callback',
-      component: () => import('./views/Callback.vue')
+      path: "/callback",
+      name: "callback",
+      component: () => import("./views/Callback.vue")
     },
     {
-      path: '/notauthorized',
-      name: 'notauthorized',
-      component: () => import('./views/NotAuthorized.vue')
+      path: "/notauthorized",
+      name: "notauthorized",
+      component: () => import("./views/NotAuthorized.vue")
     }
   ]
-})
+});
