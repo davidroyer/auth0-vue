@@ -81,6 +81,10 @@ export default class AuthService {
     // Check whether the current time is past the
     // access token's expiry time
     let expiresAt = JSON.parse(localStorage.getItem("expires_at"));
+    if (new Date().getTime() < expiresAt) {
+      console.log("user: ", localStorage.getItem("user_profile"));
+      this.userProfile = localStorage.getItem("user_profile");
+    }
     return new Date().getTime() < expiresAt;
   }
 }

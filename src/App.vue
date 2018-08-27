@@ -54,7 +54,8 @@ export default {
     });
     return {
       auth,
-      authenticated
+      authenticated,
+      userProfile
     };
   },
 
@@ -72,7 +73,7 @@ export default {
 </script>
 
 <style>
-/* @import "../node_modules/bootstrap/dist/css/bootstrap.css"; */
+@import "../node_modules/bootstrap/dist/css/bootstrap.css";
 
 .btn-margin {
   margin-top: 7px;
